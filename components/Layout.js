@@ -1,9 +1,14 @@
 import Link from 'next/link'
+import Head from 'next/head'
 
 export default function Layout({ children }) {
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Steak On It - AWS Q App</h1>
+    <>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+        <h1>Steak On It - AWS Q App</h1>
       
       <nav style={{ marginBottom: '20px' }}>
         <Link href="/" style={{ marginRight: '15px' }}>Home</Link>
@@ -15,5 +20,6 @@ export default function Layout({ children }) {
 
       <main>{children}</main>
     </div>
+    </>
   )
 }
