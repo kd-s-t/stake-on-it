@@ -1,16 +1,14 @@
 <div align="center"> 
-	<img src="./public/horizontal.png" width="20%" />
+	<img src="./public/horizontal.png" />
 </div>
 
 # Stake On It - AWS Q App
 
-React.js app with AWS Q integration for market predictions and analysis.
+TypeScript app with AWS Q integration for market predictions and analysis.
 
 <div align="center"> 
 	<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" /> 
-	<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" /> 
-	<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" /> 
-	<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" /> 
 </div>
 
 <div align="center"> 
