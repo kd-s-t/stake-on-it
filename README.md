@@ -14,6 +14,9 @@ TypeScript app for market predictions and betting analysis.
 	<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" /> 
 	<img src="https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white" /> 
 	<img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/AWS_Kiro-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/AWS_Q-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" /> 
 </div>
 
 
