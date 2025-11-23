@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, CircularProgress, Box } from '@mui/material';
+import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, CircularProgress, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert } from '@mui/material';
 import { TrendingUp, TrendingDown } from '@mui/icons-material';
 import withAuth from '../components/withAuth';
 import { useAppDispatch } from '../store/hooks';
@@ -8,6 +8,9 @@ import { updateBalance } from '../store/userSlice';
 function MarketPredictions() {
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [stakeDialog, setStakeDialog] = useState({ open: false, coin: '', direction: '', odds: 0 });
+  const [amount, setAmount] = useState('');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -20,14 +23,21 @@ function MarketPredictions() {
       .catch(() => setLoading(false));
   }, []);
 
-  const handleStake = async (coin: string, direction: string, odds: number) => {
-    const amount = prompt('Enter amount in pesos:');
+  const handleStakeClick = (coin: string, direction: string, odds: number) => {
+    setStakeDialog({ open: true, coin, direction, odds });
+    setAmount('');
+  };
+
+  const handleStakeConfirm = async () => {
     if (!amount) return;
     
     const amountNum = parseFloat(amount);
-    const potentialWin = amountNum * odds;
-    
-    if (!confirm(`Stake ₱${amountNum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} on ${coin} ${direction.toUpperCase()}\nOdds: ${odds}\nPotential winnings: ₱${potentialWin.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`)) return;
+    if (isNaN(amountNum) || amountNum <= 0) {
+      setSnackbar({ open: true, message: 'Please enter a valid amount', severity: 'error' });
+      return;
+    }
+
+    setStakeDialog({ ...stakeDialog, open: false });
 
     try {
       const token = localStorage.getItem('token');
@@ -37,16 +47,14 @@ function MarketPredictions() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ coin, prediction: direction, amount: amountNum, odds })
+        body: JSON.stringify({ coin: stakeDialog.coin, prediction: stakeDialog.direction, amount: amountNum, odds: stakeDialog.odds })
       });
       
       const data = await res.json();
       
       if (res.ok) {
-        // Update Redux balance
         if (data.balance !== undefined) {
           dispatch(updateBalance(parseFloat(data.balance) || 0));
-          // Update localStorage
           const userData = localStorage.getItem('user');
           if (userData) {
             const parsedUser = JSON.parse(userData);
@@ -54,12 +62,12 @@ function MarketPredictions() {
             localStorage.setItem('user', JSON.stringify(parsedUser));
           }
         }
-        alert('Stake placed successfully!');
+        setSnackbar({ open: true, message: 'Stake placed successfully!', severity: 'success' });
       } else {
-        alert(data.error || 'Failed to place stake');
+        setSnackbar({ open: true, message: data.error || 'Failed to place stake', severity: 'error' });
       }
     } catch {
-      alert('Failed to place stake');
+      setSnackbar({ open: true, message: 'Failed to place stake', severity: 'error' });
     }
   };
 
@@ -96,7 +104,7 @@ function MarketPredictions() {
                         <Button
                           variant="contained"
                           startIcon={<TrendingUp />}
-                          onClick={() => handleStake(pred.coin, 'up', pred.upOdds)}
+                          onClick={() => handleStakeClick(pred.coin, 'up', pred.upOdds)}
                           sx={{
                             mr: 1,
                             bgcolor: '#10b981',
@@ -109,7 +117,7 @@ function MarketPredictions() {
                         <Button
                           variant="contained"
                           startIcon={<TrendingDown />}
-                          onClick={() => handleStake(pred.coin, 'down', pred.downOdds)}
+                          onClick={() => handleStakeClick(pred.coin, 'down', pred.downOdds)}
                           sx={{
                             bgcolor: '#dc3545',
                             '&:hover': { bgcolor: '#c82333' },
@@ -127,6 +135,53 @@ function MarketPredictions() {
           )}
         </CardContent>
       </Card>
+      <Dialog open={stakeDialog.open} onClose={() => setStakeDialog({ ...stakeDialog, open: false })}>
+        <DialogTitle>Place Stake</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Stake on {stakeDialog.coin} {stakeDialog.direction.toUpperCase()}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+            Odds: {stakeDialog.odds}x
+          </Typography>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Amount (₱)"
+            type="number"
+            fullWidth
+            variant="outlined"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleStakeConfirm();
+              }
+            }}
+          />
+          {amount && !isNaN(parseFloat(amount)) && parseFloat(amount) > 0 && (
+            <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
+              Potential winnings: ₱{(parseFloat(amount) * stakeDialog.odds).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setStakeDialog({ ...stakeDialog, open: false })}>Cancel</Button>
+          <Button onClick={handleStakeConfirm} variant="contained" disabled={!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0}>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
   )
 }
 

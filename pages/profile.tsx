@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Snackbar, Alert, CircularProgress, Box } from '@mui/material';
+import { Button, Snackbar, Alert, CircularProgress, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import withAuth from '../components/withAuth';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateBalance, setUser } from '../store/userSlice';
@@ -157,54 +157,51 @@ function Profile() {
           </tbody>
         </table>
         
-        {showModal && (
-          <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', minWidth: '300px' }}>
-              <h3>Deposit Fake Money</h3>
-              <input
-                type="number"
-                placeholder="Enter amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-              />
-              <div>
-                <Button
-                  onClick={handleDeposit}
-                  disabled={depositLoading}
-                  variant="contained"
-                  sx={{
-                    mr: 1,
-                    bgcolor: '#10b981',
-                    '&:hover': { bgcolor: '#059669' },
-                    '&:disabled': { bgcolor: '#616161' }
-                  }}
-                >
-                  {depositLoading ? (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <CircularProgress size={16} sx={{ color: 'white' }} />
-                      <span>Depositing...</span>
-                    </Box>
-                  ) : (
-                    'Deposit'
-                  )}
-                </Button>
-                <Button
-                  onClick={() => setShowModal(false)}
-                  disabled={depositLoading}
-                  variant="outlined"
-                  sx={{
-                    color: '#424242',
-                    borderColor: '#424242',
-                    '&:hover': { borderColor: '#212121', bgcolor: 'rgba(66, 66, 66, 0.04)' }
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+        <Dialog open={showModal} onClose={() => !depositLoading && setShowModal(false)}>
+          <DialogTitle>Deposit Money</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Amount (₱)"
+              type="number"
+              fullWidth
+              variant="outlined"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !depositLoading) {
+                  handleDeposit();
+                }
+              }}
+              sx={{ mt: 1 }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setShowModal(false)} disabled={depositLoading}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeposit}
+              disabled={depositLoading || !amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0}
+              variant="contained"
+              sx={{
+                bgcolor: '#10b981',
+                '&:hover': { bgcolor: '#059669' },
+                '&:disabled': { bgcolor: '#616161' }
+              }}
+            >
+              {depositLoading ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CircularProgress size={16} sx={{ color: 'white' }} />
+                  <span>Depositing...</span>
+                </Box>
+              ) : (
+                'Deposit'
+              )}
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Snackbar
           open={snackbar.open}
           autoHideDuration={6000}
