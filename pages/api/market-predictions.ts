@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { query } from '../../lib/db';
-import { getOpenAIClient } from '../../lib/openai';
+import { getLatestPredictions, savePredictions, getLatestNews } from '../../lib/database';
+import { getOpenAIClient } from '../../lib/openapi';
 
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 let predictionsCache: { data: any[] | null; timestamp: number | null } = {
@@ -22,13 +22,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const dbResult = await query(
-      'SELECT data FROM market_predictions ORDER BY created_at DESC LIMIT 1'
-    );
+    const dbResult = await getLatestPredictions();
 
-    if (dbResult.rows.length > 0) {
-      const predictions = dbResult.rows[0].data;
-      const predictionsArray = Array.isArray(predictions) ? predictions : [];
+    if (dbResult?.data) {
+      const predictionsArray = Array.isArray(dbResult.data) ? dbResult.data : [];
       
       if (predictionsArray.length > 0) {
         predictionsCache.data = predictionsArray;
@@ -44,11 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Fetch latest news to base predictions on
-    const newsResult = await query(
-      'SELECT title, content, source FROM news ORDER BY created_at DESC LIMIT 20'
-    );
-    
-    const latestNews = newsResult.rows.map(row => `${row.title} - ${row.content}`).join('\n');
+    const newsRows = await getLatestNews(20);
+    const latestNews = newsRows.map(row => `${row.title} - ${row.content}`).join('\n');
 
     const openai = getOpenAIClient();
     if (!openai) {
@@ -98,7 +92,7 @@ ONLY include cryptocurrencies that are specifically mentioned in the provided ne
         predictionsCache.data = predictionsArray;
         predictionsCache.timestamp = Date.now();
         
-        await query('INSERT INTO market_predictions (data) VALUES ($1)', [JSON.stringify(predictionsArray)]);
+        await savePredictions(predictionsArray);
         
         return res.status(200).json({
           success: true,
@@ -121,13 +115,10 @@ ONLY include cryptocurrencies that are specifically mentioned in the provided ne
   } catch (error: any) {
     console.error('Market predictions error:', error);
     
-    const dbResult = await query(
-      'SELECT data FROM market_predictions ORDER BY created_at DESC LIMIT 1'
-    );
+    const dbResult = await getLatestPredictions();
 
-    if (dbResult.rows.length > 0) {
-      const predictions = dbResult.rows[0].data;
-      const predictionsArray = Array.isArray(predictions) ? predictions : [];
+    if (dbResult?.data) {
+      const predictionsArray = Array.isArray(dbResult.data) ? dbResult.data : [];
       
       if (predictionsArray.length > 0) {
         return res.status(200).json({
