@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { query } from '../../lib/db';
-import { getOpenAIClient } from '../../lib/openai';
+import { query } from "../../lib/database"';
+import { getOpenAIClient } from '../../lib/openapi';
 
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 let predictionsCache: { data: any[] | null; timestamp: number | null } = {

@@ -3,7 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { AnimatePresence } from 'framer-motion'
 import { Provider } from 'react-redux'
-import { store } from '../store/store'
+import { store } from '../lib/redux'
 import Layout from '../components/Layout'
 
 const theme = createTheme({

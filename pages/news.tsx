@@ -1,5 +1,5 @@
-import NewsFeed from '../components/news/NewsFeed'
+import NewsFeed from '../modules/news/components/NewsFeed'
 
-export default function News() {
+export default function NewsPage() {
   return <NewsFeed />
 }
