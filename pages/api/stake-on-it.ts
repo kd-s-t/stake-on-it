@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { coin, prediction, amount, odds } = req.body;
+  const { coin, prediction, amount, odds, analysis } = req.body;
   const userId = (decoded as any).userId;
   const potentialWinnings = amount * odds;
 
@@ -39,8 +39,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Create stake
     const result = await query(
-      'INSERT INTO stakes (user_id, market_id, prediction, amount, odds, potential_winnings) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [userId, coin, prediction, amount, odds, potentialWinnings]
+      'INSERT INTO stakes (user_id, market_id, prediction, amount, odds, potential_winnings, analysis) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [userId, coin, prediction, amount, odds, potentialWinnings, analysis || null]
+    );
+    
+    const stakeId = result.rows[0].id;
+    
+    // Create bet for the stake creator
+    await query(
+      'INSERT INTO bets (user_id, stake_id, market_id, prediction, amount, odds, potential_winnings, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+      [userId, stakeId, coin, prediction, amount, odds, potentialWinnings, new Date().toISOString()]
     );
     
     res.status(201).json({

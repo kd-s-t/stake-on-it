@@ -88,7 +88,7 @@ function Profile() {
   if (loading) return <div>Loading...</div>;
 
   return (
-      <div>
+      <div style={{ marginBottom: '20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
           <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
             <h3>Balance</h3>

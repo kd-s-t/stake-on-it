@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, AccountBalance, Assessment } from '@mui/icons
 
 export default function Home() {
   return (
-    <Card>
+    <Card sx={{ mb: '20px' }}>
       <CardContent>
         <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
           Welcome to Stake On It
