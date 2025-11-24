@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../lib/database';
+import { createUser } from '../../../lib/database';
 import { hashPassword, signToken } from '../../../lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -11,13 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const hashedPassword = await hashPassword(password);
-    
-    const result = await query(
-      'INSERT INTO users (email, name, password) VALUES ($1, $2, $3) RETURNING id, email, name',
-      [email, name, hashedPassword]
-    );
-    
-    const user = result.rows[0];
+    const user = await createUser(email, name, hashedPassword);
     const token = signToken({ userId: user.id, email: user.email });
     
     res.status(201).json({ token, user });

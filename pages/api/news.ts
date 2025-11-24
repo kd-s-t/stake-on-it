@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../lib/database';
+import { saveNews } from '../../lib/database';
 import { fetchCryptoNews, extractNewsFromResponse, getCachedNews, setCachedNews } from '../../lib/newsapi';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (news.length > 0) {
       setCachedNews(news);
-      await query('INSERT INTO news (data) VALUES ($1)', [JSON.stringify(news)]);
+      await saveNews(news);
     }
 
     res.status(200).json({

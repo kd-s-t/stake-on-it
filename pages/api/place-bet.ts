@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import jwt from 'jsonwebtoken';
-import { query } from "../../lib/database"';
+import { createBet, findStakeById, updateUserBalance } from '../../lib/database';
+import { verifyToken } from '../../lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -9,48 +9,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
+    const decoded = verifyToken(token || '');
+    
+    if (!decoded || typeof decoded === 'string') {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as any;
-    const userId = decoded.userId;
-
+    const userId = (decoded as any).userId;
     const { stake_id, prediction, amount, odds } = req.body;
 
     if (!stake_id || !prediction || !amount || !odds) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Check user balance
-    const userResult = await query('SELECT balance FROM users WHERE id = $1', [userId]);
-    const currentBalance = parseFloat(userResult.rows[0]?.balance || 0);
-    
-    if (currentBalance < amount) {
-      return res.status(400).json({ error: 'Insufficient balance' });
-    }
-
-    // Get stake market_id
-    const stakeResult = await query('SELECT market_id FROM stakes WHERE id = $1', [stake_id]);
-    const market_id = stakeResult.rows[0]?.market_id;
-    
-    if (!market_id) {
+    // Get stake to verify it exists
+    const stake = await findStakeById(stake_id);
+    if (!stake) {
       return res.status(400).json({ error: 'Stake not found' });
     }
 
     // Create bet
-    await query(
-      'INSERT INTO bets (user_id, stake_id, market_id, prediction, amount, odds, potential_winnings, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-      [userId, stake_id, market_id, prediction, amount, odds, amount * odds, new Date().toISOString()]
-    );
+    await createBet(stake_id, prediction, amount, odds, userId);
 
     // Update user balance
-    const newBalance = currentBalance - amount;
-    await query('UPDATE users SET balance = $1 WHERE id = $2', [newBalance, userId]);
+    const result = await updateUserBalance(userId, -amount);
 
     res.status(200).json({ 
       message: 'Bet placed successfully',
-      balance: newBalance
+      balance: result.balance
     });
   } catch (error) {
     console.error('Place bet error:', error);

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { query } from "../../lib/database"';
+import { getStakeStats } from '../../lib/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -7,20 +7,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const result = await query(`
-      SELECT 
-        market_id,
-        prediction,
-        COUNT(*) as stake_count,
-        COUNT(DISTINCT user_id) as unique_users,
-        SUM(amount) as total_amount
-      FROM stakes 
-      WHERE status = 'active'
-      GROUP BY market_id, prediction
-      ORDER BY market_id, prediction
-    `);
-    
-    res.status(200).json(result.rows);
+    const stats = await getStakeStats();
+    res.status(200).json(stats);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch stake statistics' });
   }

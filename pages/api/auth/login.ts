@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../lib/database';
+import { findUserByEmail } from '../../../lib/database';
 import { verifyPassword, signToken } from '../../../lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -14,8 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const result = await query('SELECT * FROM users WHERE email = $1', [email]);
-    const user = result.rows[0];
+    const user = await findUserByEmail(email);
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { query } from "../../lib/database"';
+import { createStake, createBet, getUserBalance, updateUserBalance, createTransaction } from '../../lib/database';
 import { verifyToken } from '../../lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,40 +20,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Check user balance
-    const userResult = await query('SELECT balance FROM users WHERE id = $1', [userId]);
-    const currentBalance = parseFloat(userResult.rows[0]?.balance || 0);
+    const userBalance = await getUserBalance(userId);
+    const currentBalance = parseFloat(userBalance?.balance || 0);
     
     if (currentBalance < amount) {
       return res.status(400).json({ error: 'Insufficient balance' });
     }
 
     // Deduct amount from balance
-    const newBalance = currentBalance - amount;
-    await query('UPDATE users SET balance = $1 WHERE id = $2', [newBalance, userId]);
+    const balanceResult = await updateUserBalance(userId, -amount);
 
     // Create transaction record
-    await query(
-      'INSERT INTO transactions (user_id, type, amount, description) VALUES ($1, $2, $3, $4)',
-      [userId, 'stake', amount, `Stake on ${coin} ${prediction.toUpperCase()}`]
-    );
+    await createTransaction(userId, 'stake', amount, `Stake on ${coin} ${prediction.toUpperCase()}`);
 
     // Create stake
-    const result = await query(
-      'INSERT INTO stakes (user_id, market_id, prediction, amount, odds, potential_winnings, analysis) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [userId, coin, prediction, amount, odds, potentialWinnings, analysis || null]
-    );
-    
-    const stakeId = result.rows[0].id;
+    const stake = await createStake(coin, prediction, amount, odds, analysis || '', userId);
     
     // Create bet for the stake creator
-    await query(
-      'INSERT INTO bets (user_id, stake_id, market_id, prediction, amount, odds, potential_winnings, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-      [userId, stakeId, coin, prediction, amount, odds, potentialWinnings, new Date().toISOString()]
-    );
+    await createBet(stake.id, prediction, amount, odds, userId);
     
     res.status(201).json({
-      ...result.rows[0],
-      balance: newBalance
+      ...stake,
+      balance: balanceResult.balance
     });
   } catch (error) {
     console.error('Stake error:', error);

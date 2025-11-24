@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { query } from "../../lib/database"';
+import { updateUserBalance, createTransaction, query } from '../../lib/database';
 import { verifyToken } from '../../lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,21 +20,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     await query('BEGIN');
     
-    await query(
-      'UPDATE users SET balance = balance + $1 WHERE id = $2',
-      [amount, userId]
-    );
+    // Update user balance
+    const balanceResult = await updateUserBalance(userId, amount);
     
-    await query(
-      'INSERT INTO transactions (user_id, type, amount, description) VALUES ($1, $2, $3, $4)',
-      [userId, 'deposit', amount, 'Fake money deposit']
-    );
-    
-    const result = await query('SELECT balance FROM users WHERE id = $1', [userId]);
+    // Create transaction record
+    await createTransaction(userId, 'deposit', amount, 'Fake money deposit');
     
     await query('COMMIT');
     
-    res.status(200).json({ balance: result.rows[0].balance });
+    res.status(200).json({ balance: balanceResult.balance });
   } catch (error) {
     await query('ROLLBACK');
     res.status(500).json({ error: 'Deposit failed' });
