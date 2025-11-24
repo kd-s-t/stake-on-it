@@ -6,17 +6,34 @@
 
 TypeScript app for market predictions and betting analysis.
 
-<div align="center"> 
+<div align="center" style="margin-bottom: 20px;"> 
 	<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" /> 
 	<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" /> 
 	<img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" /> 
 	<img src="https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white" /> 
-	<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" /> 
 	<img src="https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white" /> 
+</div>
+
+<div align="center" style="margin-bottom: 20px;"> 
+	<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" /> 
+</div>
+
+<div align="center" style="margin-bottom: 20px;"> 
 	<img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" /> 
+</div>
+
+<div align="center" style="margin-bottom: 20px;"> 
 	<img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" /> 
-	<img src="https://img.shields.io/badge/AWS_Kiro-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/TheNewsAPI-FF6B35?style=for-the-badge&logo=rss&logoColor=white" /> 
+</div>
+
+<div align="center" style="margin-bottom: 20px;"> 
+	<img src="https://img.shields.io/badge/AWS_S3-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" /> 
 	<img src="https://img.shields.io/badge/AWS_Q-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/Kiro-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" /> 
+	<img src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" /> 
 </div>
 
 

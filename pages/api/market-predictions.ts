@@ -43,6 +43,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    // Fetch latest news to base predictions on
+    const newsResult = await query(
+      'SELECT title, content, source FROM news ORDER BY created_at DESC LIMIT 20'
+    );
+    
+    const latestNews = newsResult.rows.map(row => `${row.title} - ${row.content}`).join('\n');
+
     const openai = getOpenAIClient();
     if (!openai) {
       return res.status(200).json({
@@ -52,7 +59,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const prompt = `Provide exactly 10 cryptocurrency predictions. Return as valid JSON array with objects containing: {"coin": "Bitcoin", "analysis": "Brief analysis why price will move", "upOdds": 1.85, "downOdds": 2.10}. Odds should be realistic betting odds between 1.20-3.50. Only return the JSON array, no other text.`;
+    const prompt = `Based on the following latest cryptocurrency news, provide exactly 10 cryptocurrency predictions for the most trending/mentioned coins from the news. Return as valid JSON array with objects containing: {"coin": "CoinName", "analysis": "Detailed 2-paragraph analysis", "upOdds": 1.85, "downOdds": 2.10}.
+
+Latest News:
+${latestNews}
+
+For analysis, write exactly 5 paragraphs based on the news:
+Paragraph 1: Bullish factors - mention specific people, organizations, or resources from the news that could drive price UP.
+Paragraph 2: Bearish factors - mention specific people, organizations, or resources from the news that could drive price DOWN.
+
+ONLY include cryptocurrencies that are specifically mentioned in the provided news. Do not include Bitcoin unless it appears in the news. Odds should be realistic betting odds between 1.20-3.50. Only return the JSON array, no other text.`;
 
     const completion = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',

@@ -94,6 +94,7 @@ export default function NewsFeed() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      sx={{ mb: '20px' }}
     >
       <Box
         sx={{

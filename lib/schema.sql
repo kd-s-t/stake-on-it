@@ -44,3 +44,16 @@ CREATE TABLE IF NOT EXISTS news (
   data JSONB NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Bets table (individual betting actions)
+CREATE TABLE IF NOT EXISTS bets (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  stake_id INTEGER REFERENCES stakes(id),
+  market_id VARCHAR(255) NOT NULL,
+  prediction TEXT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  odds DECIMAL(5,2) NOT NULL,
+  potential_winnings DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

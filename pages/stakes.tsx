@@ -13,6 +13,21 @@ function Stakes() {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
   const dispatch = useAppDispatch();
 
+  const getTimeRemaining = (createdAt: string) => {
+    const created = new Date(createdAt);
+    const expiry = new Date(created.getTime() + 24 * 60 * 60 * 1000); // 24 hours
+    const now = new Date();
+    const remaining = expiry.getTime() - now.getTime();
+    
+    if (remaining <= 0) return 'Expired';
+    
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  };
+
   useEffect(() => {
     fetch('/api/all-stakes')
       .then(res => res.json())
@@ -42,14 +57,14 @@ function Stakes() {
     
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/stake-on-it', {
+      const res = await fetch('/api/place-bet', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ 
-          coin: stakeDialog.originalStake.market_id, 
+          stake_id: stakeDialog.originalStake.id, 
           prediction: stakeDialog.prediction, 
           amount: amountNum, 
           odds 
@@ -68,7 +83,7 @@ function Stakes() {
             localStorage.setItem('user', JSON.stringify(parsedUser));
           }
         }
-        setSnackbar({ open: true, message: 'Stake placed successfully!', severity: 'success' });
+        setSnackbar({ open: true, message: 'Bet placed successfully!', severity: 'success' });
         fetch('/api/all-stakes')
           .then(res => res.json())
           .then(data => {
@@ -84,7 +99,8 @@ function Stakes() {
   };
 
   return (
-    <Card>
+    <>
+      <Card sx={{ mb: '20px' }}>
         <CardContent>
           <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
             All Stakes
@@ -98,71 +114,89 @@ function Stakes() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 600 }}>User</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Coin</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Prediction</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Amount</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Odds</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Time Left</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Bets</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Analysis</TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {stakes.map((stake: any) => (
-                    <TableRow key={stake.id} hover>
-                      <TableCell>{stake.user_name}</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>{stake.market_id}</TableCell>
-                      <TableCell>
-                        <Chip
-                          label={stake.prediction.toUpperCase()}
-                          icon={stake.prediction === 'up' ? <TrendingUp /> : <TrendingDown />}
-                          color={stake.prediction === 'up' ? 'success' : 'error'}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>₱{parseFloat(stake.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{stake.odds}x</TableCell>
-                      <TableCell>
-                        <Chip
-                          label={stake.status}
-                          size="small"
-                          sx={{
-                            bgcolor: stake.status === 'active' ? '#10b981' : '#f9f8f8',
-                            color: stake.status === 'active' ? 'white' : '#000'
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          size="small"
-                          variant="contained"
-                          startIcon={<TrendingUp />}
-                          onClick={() => handleStakeOnExisting(stake, 'up')}
-                          sx={{
-                            mr: 1,
-                            bgcolor: '#10b981',
-                            '&:hover': { bgcolor: '#059669' },
-                            fontSize: '0.75rem'
-                          }}
-                        >
-                          UP
-                        </Button>
-                        <Button
-                          size="small"
-                          variant="contained"
-                          startIcon={<TrendingDown />}
-                          onClick={() => handleStakeOnExisting(stake, 'down')}
-                          sx={{
-                            bgcolor: '#dc3545',
-                            '&:hover': { bgcolor: '#c82333' },
-                            fontSize: '0.75rem'
-                          }}
-                        >
-                          DOWN
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {stakes.map((stake: any) => {
+                    return (
+                      <TableRow key={stake.id} hover>
+                        <TableCell sx={{ fontWeight: 600 }}>{stake.market_id}</TableCell>
+                        <TableCell>
+                          <Chip
+                            label={stake.prediction.toUpperCase()}
+                            icon={stake.prediction === 'up' ? <TrendingUp /> : <TrendingDown />}
+                            color={stake.prediction === 'up' ? 'success' : 'error'}
+                            size="small"
+                          />
+                        </TableCell>
+                        <TableCell>₱{parseFloat(stake.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                        <TableCell>{stake.odds}x</TableCell>
+                        <TableCell>
+                          <Chip
+                            label={stake.status}
+                            size="small"
+                            sx={{
+                              bgcolor: stake.status === 'active' ? '#10b981' : '#f9f8f8',
+                              color: stake.status === 'active' ? 'white' : '#000'
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" sx={{ fontSize: '0.75rem' }}>
+                            {getTimeRemaining(stake.created_at)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" sx={{ fontSize: '0.75rem' }}>
+                            ↗️ {stake.up_bet_count || 0} UP | ↘️ {stake.down_bet_count || 0} DOWN
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" sx={{ fontSize: '0.75rem', maxWidth: '200px' }}>
+                            {stake.analysis || 'No analysis provided'}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            startIcon={<TrendingUp />}
+                            onClick={() => handleStakeOnExisting(stake, 'up')}
+                            sx={{
+                              mr: 1,
+                              bgcolor: '#10b981',
+                              '&:hover': { bgcolor: '#059669' },
+                              fontSize: '0.75rem'
+                            }}
+                          >
+                            UP
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            startIcon={<TrendingDown />}
+                            onClick={() => handleStakeOnExisting(stake, 'down')}
+                            sx={{
+                              bgcolor: '#dc3545',
+                              '&:hover': { bgcolor: '#c82333' },
+                              fontSize: '0.75rem'
+                            }}
+                          >
+                            DOWN
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -210,13 +244,13 @@ function Stakes() {
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity}>
           {snackbar.message}
         </Alert>
       </Snackbar>
-  )
+    </>
+  );
 }
 
 export default withAuth(Stakes);
