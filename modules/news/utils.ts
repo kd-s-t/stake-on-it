@@ -22,7 +22,7 @@ export function getGridSizes(news: NewsItem[]): Array<{ xs: number; md: number }
     if (rowCount === 0) {
       if (remainingItems >= 2) {
         patternIndex = 0
-        pattern = ROW_PATTERNS[patternIndex]
+        pattern = [...ROW_PATTERNS[patternIndex]]
       } else {
         break
       }
@@ -31,7 +31,7 @@ export function getGridSizes(news: NewsItem[]): Array<{ xs: number; md: number }
     else if (rowCount === 1) {
       if (remainingItems >= 2) {
         patternIndex = 1
-        pattern = ROW_PATTERNS[patternIndex]
+        pattern = [...ROW_PATTERNS[patternIndex]]
       } else {
         break
       }
@@ -39,7 +39,7 @@ export function getGridSizes(news: NewsItem[]): Array<{ xs: number; md: number }
     // Row 3: 3col full width (pattern 2)
     else if (rowCount === 2) {
       patternIndex = 2
-      pattern = ROW_PATTERNS[patternIndex]
+      pattern = [...ROW_PATTERNS[patternIndex]]
     }
     // After that, use random pattern
     else {
@@ -62,7 +62,7 @@ export function getGridSizes(news: NewsItem[]): Array<{ xs: number; md: number }
         const seed = itemIndex * 7 + (news[itemIndex]?.title?.charCodeAt(0) || 0) + attempts
         const randomIdx = seed % availablePatterns.length
         patternIndex = availablePatterns[randomIdx].idx
-        pattern = ROW_PATTERNS[patternIndex]
+        pattern = [...ROW_PATTERNS[patternIndex]]
         attempts++
       } while (recentPatterns.includes(patternIndex) && attempts < 20)
     }

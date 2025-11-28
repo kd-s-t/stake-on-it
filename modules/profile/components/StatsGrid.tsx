@@ -34,7 +34,7 @@ export default function StatsGrid({ balance, stats, onDepositClick }: StatsGridP
       
       <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
         <h3>Total Profit</h3>
-        <p style={{ fontSize: '24px', fontWeight: 'bold', color: stats?.totalProfit >= 0 ? '#28a745' : '#dc3545' }}>
+        <p style={{ fontSize: '24px', fontWeight: 'bold', color: (stats?.totalProfit ?? 0) >= 0 ? '#28a745' : '#dc3545' }}>
           ₱{(stats?.totalProfit || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
       </div>

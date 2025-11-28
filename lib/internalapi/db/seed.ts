@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { query } from '../../db';
+import { query } from '../../database/db';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const seedPath = path.join(process.cwd(), 'lib', 'seeders.sql');
+    const seedPath = path.join(process.cwd(), 'lib', 'database', 'seeders.sql');
     const seedData = fs.readFileSync(seedPath, 'utf8');
     
     await query(seedData);

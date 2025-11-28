@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../db';
+import { query } from '../../database/db';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const schemaPath = path.join(process.cwd(), 'lib', 'schema.sql');
+    const schemaPath = path.join(process.cwd(), 'lib', 'database', 'schema.sql');
     const schema = fs.readFileSync(schemaPath, 'utf8');
     
     await query(schema);
