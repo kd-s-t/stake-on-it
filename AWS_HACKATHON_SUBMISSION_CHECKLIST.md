@@ -58,11 +58,11 @@
   - [ ] Screenshot showing agentic coding workflows
   - [ ] Screenshot showing spec-driven development (if used)
 - [ ] Screenshots uploaded to submission portal (DoraHacks) or hosted on GitHub/Imgur/Google Drive with public links
-- [ ] Written description of how tools were leveraged
-  - [ ] TypeScript conversion process
-  - [ ] Refactoring examples
-  - [ ] Multi-step agentic coding examples
-  - [ ] Code suggestions and debugging assistance
+- [x] Written description of how tools were leveraged (see AWS_AI_TOOLS_USAGE.md)
+  - [x] TypeScript conversion process
+  - [x] Refactoring examples
+  - [x] Multi-step agentic coding examples
+  - [x] Code suggestions and debugging assistance
 - [ ] Video includes tool demonstrations
   - [ ] Show Q Developer/Kiro in video demo
   - [ ] Comment on tool usage during video

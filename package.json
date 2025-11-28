@@ -27,6 +27,8 @@
     "@types/pg": "^8.10.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.0.5",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "typescript": "^5.0.0"
@@ -42,12 +44,13 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
+    "validate": "npm run type-check && npm run build",
     "db:init": "node scripts/db-init.js",
     "db:migrate": "node scripts/db-migrate.js",
     "db:seed": "node scripts/db-seed.js",
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "echo"
+    "*.{ts,tsx}": "echo Skipping per-file lint (using pre-push hook instead)"
   }
 }

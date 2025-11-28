@@ -1,6 +1,6 @@
 import { TableRow, TableCell, Typography, Button, Box } from '@mui/material';
 import { TrendingUp, TrendingDown } from '@mui/icons-material';
-import { getCryptoIconUrl } from '/Users/sharkysharksharks/Documents/apps/stake-on-it/lib/s3';
+import { getCryptoIconUrl } from '../../../lib/s3';
 import { Prediction, AnalysisModalState } from '../types';
 import { BUTTON_COLORS } from '../consts';
 
