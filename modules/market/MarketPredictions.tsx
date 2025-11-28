@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContai
 import { TrendingUp, TrendingDown, Refresh, Close } from '@mui/icons-material';
 import { useAppDispatch } from '../../lib/redux';
 import { updateBalance } from '../../lib/redux';
-import { getCryptoIconUrl } from '/Users/sharkysharksharks/Documents/apps/stake-on-it/lib/s3';
+import { getCryptoIconUrl } from '../../lib/s3';
 
 export default function MarketPredictions() {
   const [predictions, setPredictions] = useState([]);

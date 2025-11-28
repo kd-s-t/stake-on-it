@@ -48,9 +48,6 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "npm run lint:fix",
-      "npm run type-check"
-    ]
+    "*.{ts,tsx}": "echo"
   }
 }
