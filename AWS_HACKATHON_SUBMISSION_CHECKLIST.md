@@ -40,13 +40,13 @@
 - [x] Code is well-organized and commented
 
 ### 3. Video Pitch/Overview
-- [ ] Video demonstrates all key features
+- [ ] Video demonstrates all key features (5 minutes recommended)
 - [ ] Clear voiceover explanation
 - [ ] Shows user flow and functionality
 - [ ] Highlights AI-powered predictions feature
 - [ ] Shows staking/betting workflow
-- [ ] Video is under recommended length (typically 3-5 minutes)
-- [ ] Video is uploaded to YouTube/Vimeo and linked in submission
+- [ ] Video is 5 minutes in length (recommended)
+- [ ] Video is uploaded to YouTube/Vimeo/Google Drive and linked in submission (must be publicly accessible)
 
 ### 4. Proof of AWS AI Tools Usage (CRITICAL)
 - [ ] Screenshots of Amazon Q Developer in action
@@ -57,6 +57,7 @@
   - [ ] Screenshot showing Kiro interface
   - [ ] Screenshot showing agentic coding workflows
   - [ ] Screenshot showing spec-driven development (if used)
+- [ ] Screenshots uploaded to submission portal (DoraHacks) or hosted on GitHub/Imgur/Google Drive with public links
 - [ ] Written description of how tools were leveraged
   - [ ] TypeScript conversion process
   - [ ] Refactoring examples
