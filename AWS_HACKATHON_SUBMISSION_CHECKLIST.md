@@ -49,15 +49,15 @@
 - [ ] Video is uploaded to YouTube/Vimeo/Google Drive and linked in submission (must be publicly accessible)
 
 ### 4. Proof of AWS AI Tools Usage (CRITICAL)
-- [ ] Screenshots of Amazon Q Developer in action
-  - [ ] Screenshot showing Q Developer chat/assistance
-  - [ ] Screenshot showing code suggestions
-  - [ ] Screenshot showing refactoring assistance
-- [ ] Screenshots of Kiro IDE usage
-  - [ ] Screenshot showing Kiro interface
-  - [ ] Screenshot showing agentic coding workflows
-  - [ ] Screenshot showing spec-driven development (if used)
-- [ ] Screenshots uploaded to submission portal (DoraHacks) or hosted on GitHub/Imgur/Google Drive with public links
+- [x] Screenshots of Amazon Q Developer in action (5 screenshots uploaded)
+  - [x] Screenshot showing Q Developer chat/assistance
+  - [x] Screenshot showing code suggestions
+  - [x] Screenshot showing refactoring assistance
+- [x] Screenshots of Kiro IDE usage
+  - [x] Screenshot showing Kiro interface
+  - [x] Screenshot showing agentic coding workflows
+  - [x] Screenshot showing spec-driven development (if used)
+- [x] Screenshots uploaded to submission portal (DoraHacks) or hosted on GitHub/Imgur/Google Drive with public links
 - [x] Written description of how tools were leveraged (see AWS_AI_TOOLS_USAGE.md)
   - [x] TypeScript conversion process
   - [x] Refactoring examples
@@ -203,16 +203,16 @@
 ## 📸 Screenshot Checklist
 
 ### Q Developer Screenshots
-- [ ] Q Developer chat interface with code questions
-- [ ] Code suggestions/autocomplete in action
-- [ ] Refactoring assistance examples
-- [ ] Multi-step coding tasks
+- [x] Q Developer chat interface with code questions
+- [x] Code suggestions/autocomplete in action
+- [x] Refactoring assistance examples
+- [x] Multi-step coding tasks
 
 ### Kiro Screenshots
-- [ ] Kiro IDE main interface
-- [ ] Agentic coding workflows
-- [ ] Spec-driven development (if used)
-- [ ] Code generation examples
+- [x] Kiro IDE main interface
+- [x] Agentic coding workflows
+- [x] Spec-driven development (if used)
+- [x] Code generation examples
 
 ### Application Screenshots
 - [ ] Home page
