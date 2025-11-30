@@ -23,9 +23,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const userBalance = await getUserBalance(userId);
     const currentBalance = parseFloat(userBalance?.balance || 0);
     
+    console.log('Balance check:', { currentBalance, amount, userId, userBalance });
+    
     if (currentBalance < amount) {
+      console.log('Insufficient balance detected');
       return res.status(400).json({ error: 'Insufficient balance' });
     }
+    
+    console.log('Balance check passed, proceeding with bet');
 
     // Deduct amount from balance
     const balanceResult = await updateUserBalance(userId, -amount);

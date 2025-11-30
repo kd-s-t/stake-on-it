@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createBet, findStakeById, updateUserBalance } from '../../lib/database';
+import { createBet, findStakeById, updateUserBalance, getUserBalance } from '../../lib/database';
 import { verifyToken } from '../../lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -26,6 +26,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const stake = await findStakeById(stake_id);
     if (!stake) {
       return res.status(400).json({ error: 'Stake not found' });
+    }
+
+    // Check user balance
+    const userBalance = await getUserBalance(userId);
+    const currentBalance = parseFloat(userBalance?.balance || 0);
+    
+    if (currentBalance < amount) {
+      return res.status(400).json({ error: 'Insufficient balance' });
     }
 
     // Create bet
