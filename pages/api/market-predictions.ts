@@ -41,8 +41,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Fetch latest news to base predictions on
-    const newsRows = await getLatestNews(20);
-    const latestNews = newsRows.map(row => `${row.title} - ${row.content}`).join('\n');
+    const newsItems = await getLatestNews(20);
+    const latestNews = newsItems.map(item => {
+      const title = item.title || item.headline || '';
+      const content = item.summary || item.description || item.content || '';
+      return `${title} - ${content}`;
+    }).filter(text => text.trim().length > 0).join('\n');
 
     const openai = getOpenAIClient();
     if (!openai) {
@@ -115,21 +119,28 @@ ONLY include cryptocurrencies that are specifically mentioned in the provided ne
   } catch (error: any) {
     console.error('Market predictions error:', error);
     
-    const dbResult = await getLatestPredictions();
+    try {
+      const dbResult = await getLatestPredictions();
 
-    if (dbResult?.data) {
-      const predictionsArray = Array.isArray(dbResult.data) ? dbResult.data : [];
-      
-      if (predictionsArray.length > 0) {
-        return res.status(200).json({
-          success: true,
-          predictions: predictionsArray,
-          cached: true,
-          source: 'database'
-        });
+      if (dbResult?.data) {
+        const predictionsArray = Array.isArray(dbResult.data) ? dbResult.data : [];
+        
+        if (predictionsArray.length > 0) {
+          return res.status(200).json({
+            success: true,
+            predictions: predictionsArray,
+            cached: true,
+            source: 'database'
+          });
+        }
       }
+    } catch (dbError) {
+      console.error('Database fallback error:', dbError);
     }
 
-    return res.status(500).json({ error: 'Failed to get market predictions' });
+    return res.status(500).json({ 
+      error: 'Failed to get market predictions', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    });
   }
 }

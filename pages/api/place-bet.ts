@@ -42,4 +42,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Place bet error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-}
+} 

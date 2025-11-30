@@ -17,8 +17,16 @@ export async function savePredictions(predictions: any[]) {
 
 export async function getLatestNews(limit: number = 20) {
   const result = await query(
-    'SELECT title, content, source FROM news ORDER BY created_at DESC LIMIT $1',
+    'SELECT data FROM news ORDER BY created_at DESC LIMIT $1',
     [limit]
   );
-  return result.rows;
+  
+  const allNews: any[] = [];
+  for (const row of result.rows) {
+    if (row.data && Array.isArray(row.data)) {
+      allNews.push(...row.data);
+    }
+  }
+  
+  return allNews.slice(0, limit);
 }
