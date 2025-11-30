@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS stakes (
   odds DECIMAL(5,2) NOT NULL,
   potential_winnings DECIMAL(10,2) NOT NULL,
   status VARCHAR(50) DEFAULT 'active',
+  analysis TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

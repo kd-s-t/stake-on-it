@@ -5,6 +5,8 @@ import { AnimatePresence } from 'framer-motion'
 import { Provider } from 'react-redux'
 import { store } from '../lib/redux'
 import Layout from '../components/Layout'
+import { useEffect } from 'react'
+import { logout, checkTokenExpiration } from '../lib/auth-utils'
 
 const theme = createTheme({
   palette: {
@@ -75,6 +77,41 @@ const theme = createTheme({
 export default function App({ Component, pageProps, router }: AppProps) {
   const isLoginPage = router.pathname === '/login'
   
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+      const response = await originalFetch(...args);
+      
+      if (response.status === 401) {
+        try {
+          const data = await response.clone().json();
+          if (data.expired) {
+            logout();
+            return response;
+          }
+        } catch {
+          const token = localStorage.getItem('token');
+          if (token && checkTokenExpiration(token)) {
+            logout();
+          }
+        }
+      }
+      
+      return response;
+    };
+
+    const token = localStorage.getItem('token');
+    if (token && checkTokenExpiration(token)) {
+      logout();
+    }
+
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, []);
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>

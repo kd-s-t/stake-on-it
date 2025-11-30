@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const stake = await createStake(coin, prediction, amount, odds, analysis || '', userId);
     
     // Create bet for the stake creator
-    await createBet(stake.id, prediction, amount, odds, userId);
+    await createBet(stake.id, coin, prediction, amount, odds, userId);
     
     res.status(201).json({
       ...stake,
@@ -45,6 +45,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   } catch (error) {
     console.error('Stake error:', error);
-    res.status(500).json({ error: 'Failed to create stake' });
+    res.status(500).json({ 
+      error: 'Failed to create stake', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    });
   }
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../lib/redux';
 import { updateBalance, setUser } from '../../lib/redux';
 import { UserStats, SnackbarState } from './types';
+import { logout } from '../../lib/auth-utils';
 
 export const useProfile = () => {
   const [showModal, setShowModal] = useState(false);
@@ -22,10 +23,24 @@ export const useProfile = () => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found in localStorage');
+          setLoading(false);
+          return;
+        }
         const res = await fetch('/api/user-stats', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
+        if (!res.ok) {
+          if (data.expired || res.status === 401) {
+            logout();
+            return;
+          }
+          console.error('Failed to fetch stats:', data);
+          setLoading(false);
+          return;
+        }
         setStats(data);
         const newBalance = parseFloat(data.balance) || 0;
         dispatch(updateBalance(newBalance));
@@ -33,7 +48,7 @@ export const useProfile = () => {
           dispatch(setUser({ user: { ...user, balance: newBalance }, token: token || '' }));
         }
       } catch (error) {
-        console.error('Failed to fetch stats');
+        console.error('Failed to fetch stats:', error);
       }
       setLoading(false);
     };

@@ -17,23 +17,20 @@ export async function getUserStats(userId: number) {
   const result = await query(`
     SELECT 
       u.balance,
-      COUNT(CASE WHEN b.status = 'won' THEN 1 END) as wins,
-      COUNT(CASE WHEN b.status = 'lost' THEN 1 END) as losses,
-      COALESCE(SUM(CASE WHEN b.status = 'won' THEN b.potential_winnings - b.amount ELSE 0 END), 0) -
-      COALESCE(SUM(CASE WHEN b.status = 'lost' THEN b.amount ELSE 0 END), 0) as total_profit
+      0::int as wins,
+      0::int as losses,
+      0::decimal as total_profit
     FROM users u
-    LEFT JOIN bets b ON u.id = b.user_id
     WHERE u.id = $1
-    GROUP BY u.id, u.balance
   `, [userId]);
-  return result.rows[0];
+  return result.rows[0] || { balance: 0, wins: 0, losses: 0, total_profit: 0 };
 }
 
 export async function getUserBets(userId: number) {
   const result = await query(`
-    SELECT b.*, s.market_id, s.analysis
+    SELECT b.*, s.market_id, s.analysis, COALESCE(s.status, 'active') as status
     FROM bets b
-    JOIN stakes s ON b.stake_id = s.id
+    LEFT JOIN stakes s ON b.stake_id = s.id
     WHERE b.user_id = $1
     ORDER BY b.created_at DESC
   `, [userId]);

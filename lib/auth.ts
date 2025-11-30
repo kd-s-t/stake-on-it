@@ -12,7 +12,20 @@ export const signToken = (payload: any) => jwt.sign(payload, JWT_SECRET, { expir
 export const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, JWT_SECRET);
-  } catch {
+  } catch (error: any) {
+    if (error.name === 'TokenExpiredError') {
+      return { expired: true };
+    }
     return null;
+  }
+};
+
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const decoded = jwt.decode(token) as any;
+    if (!decoded || !decoded.exp) return true;
+    return Date.now() >= decoded.exp * 1000;
+  } catch {
+    return true;
   }
 };

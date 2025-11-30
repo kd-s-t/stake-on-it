@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Create bet
-    await createBet(stake_id, prediction, amount, odds, userId);
+    await createBet(stake_id, stake.market_id, prediction, amount, odds, userId);
 
     // Update user balance
     const result = await updateUserBalance(userId, -amount);

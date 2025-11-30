@@ -23,18 +23,19 @@ export async function findStakeById(stakeId: number) {
 }
 
 export async function createStake(marketId: string, prediction: string, amount: number, odds: number, analysis: string, userId: number) {
+  const potentialWinnings = amount * odds;
   const result = await query(
-    'INSERT INTO stakes (market_id, prediction, amount, odds, analysis, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-    [marketId, prediction, amount, odds, analysis, userId]
+    'INSERT INTO stakes (market_id, prediction, amount, odds, potential_winnings, analysis, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+    [marketId, prediction, amount, odds, potentialWinnings, analysis || null, userId]
   );
   return result.rows[0];
 }
 
-export async function createBet(stakeId: number, prediction: string, amount: number, odds: number, userId: number) {
+export async function createBet(stakeId: number, marketId: string, prediction: string, amount: number, odds: number, userId: number) {
   const potentialWinnings = amount * odds;
   const result = await query(
-    'INSERT INTO bets (stake_id, prediction, amount, odds, potential_winnings, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-    [stakeId, prediction, amount, odds, potentialWinnings, userId]
+    'INSERT INTO bets (stake_id, market_id, prediction, amount, odds, potential_winnings, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+    [stakeId, marketId, prediction, amount, odds, potentialWinnings, userId]
   );
   return result.rows[0];
 }
