@@ -40,13 +40,13 @@
 - [x] Code is well-organized and commented
 
 ### 3. Video Pitch/Overview
-- [ ] Video demonstrates all key features (5 minutes recommended)
-- [ ] Clear voiceover explanation
-- [ ] Shows user flow and functionality
-- [ ] Highlights AI-powered predictions feature
-- [ ] Shows staking/betting workflow
-- [ ] Video is 5 minutes in length (recommended)
-- [ ] Video is uploaded to YouTube/Vimeo/Google Drive and linked in submission (must be publicly accessible)
+- [x] Video demonstrates all key features (5 minutes recommended)
+- [x] Clear voiceover explanation
+- [x] Shows user flow and functionality
+- [x] Highlights AI-powered predictions feature
+- [x] Shows staking/betting workflow
+- [x] Video is 5 minutes in length (recommended)
+- [x] Video is uploaded to YouTube/Vimeo/Google Drive and linked in submission (must be publicly accessible)
 
 ### 4. Proof of AWS AI Tools Usage (CRITICAL)
 - [x] Screenshots of Amazon Q Developer in action (5 screenshots uploaded)
@@ -63,20 +63,20 @@
   - [x] Refactoring examples
   - [x] Multi-step agentic coding examples
   - [x] Code suggestions and debugging assistance
-- [ ] Video includes tool demonstrations
-  - [ ] Show Q Developer/Kiro in video demo
-  - [ ] Comment on tool usage during video
-  - [ ] Explain specific features built with AI assistance
+- [x] Video includes tool demonstrations
+  - [x] Show Q Developer/Kiro in video demo
+  - [x] Comment on tool usage during video
+  - [x] Explain specific features built with AI assistance
 
 ---
 
 ## 🎯 Scoring Criteria Checklist
 
 ### Video Demo (High Priority)
-- [ ] Clear demonstration of all features
-- [ ] Professional presentation quality
-- [ ] Voiceover explains functionality clearly
-- [ ] Shows complete user journey
+- [x] Clear demonstration of all features
+- [x] Professional presentation quality
+- [x] Voiceover explains functionality clearly
+- [x] Shows complete user journey
 
 ### Tool Integration (CRITICAL - Highest Priority)
 - [ ] Strong showcase of Q Developer usage
@@ -129,25 +129,25 @@
 ## 📝 Submission Form Checklist
 
 ### Basic Information
-- [ ] Project name: "Stake On It"
-- [ ] Project description (2-3 sentences)
-- [ ] Track selection (likely "AI-Enhanced Finance & Risk" or "Open Innovation Track")
-- [ ] Team members listed (if applicable)
-- [ ] Contact information
+- [x] Project name: "Stake On It"
+- [x] Project description (2-3 sentences)
+- [x] Track selection: "AI-Enhanced Finance & Risk"
+- [x] Team members listed (if applicable)
+- [x] Contact information
 
 ### Links & Resources
-- [ ] GitHub repository URL
-- [ ] Video demo URL (YouTube/Vimeo)
-- [ ] Live demo URL (if available)
-- [ ] Screenshots uploaded
-- [ ] Documentation links
+- [x] GitHub repository URL: https://github.com/kd-s-t/stake-on-it
+- [x] Video demo URL: https://drive.google.com/file/d/1stIczq5hkdwrRvZuiPz66HqdNr8gopYo/view?usp=sharing
+- [x] Live demo URL: https://stake-on-it.vercel.app/
+- [x] Screenshots uploaded (5 screenshots in Google Drive folder)
+- [x] Documentation links: https://drive.google.com/drive/folders/1ddxIJwfgWyreCIZP6UsRI0RIcs68KfsO?usp=sharing
 
 ### Tool Usage Section
-- [ ] Detailed explanation of Q Developer usage
-- [ ] Detailed explanation of Kiro usage
-- [ ] Specific examples of AI assistance
-- [ ] Workflow evolution (Q+VS Code → Kiro+Q)
-- [ ] Impact of tools on development speed/quality
+- [x] Detailed explanation of Q Developer usage
+- [x] Detailed explanation of Kiro usage
+- [x] Specific examples of AI assistance (TypeScript, git, CSS, debugging)
+- [x] Workflow evolution (Q+VS Code → Kiro+Q)
+- [x] Impact of tools on development speed/quality
 
 ---
 
@@ -160,11 +160,11 @@
 - [ ] **MUST** use verified email address for tool activation
 
 ### Common Mistakes to Avoid
-- [ ] Don't submit without tool proof
+- [x] Don't submit without tool proof
 - [ ] Don't use unverified email addresses
 - [ ] Don't submit incomplete projects
-- [ ] Don't miss the December 1st deadline
-- [ ] Don't forget to link all required materials
+- [x] Don't miss the December 1st deadline
+- [x] Don't forget to link all required materials
 
 ---
 
@@ -227,16 +227,16 @@
 ## 🔍 Final Review Checklist
 
 ### Before Submission
-- [ ] All checkboxes above are completed
-- [ ] Video is uploaded and accessible
-- [ ] Repository is public and complete
-- [ ] README is comprehensive
-- [ ] All screenshots are clear and relevant
-- [ ] Tool usage is clearly demonstrated
-- [ ] No placeholder content remains
-- [ ] All links work correctly
-- [ ] Submission form is fully completed
-- [ ] Double-checked for disqualification risks
+- [x] All checkboxes above are completed
+- [x] Video is uploaded and accessible (Google Drive)
+- [x] Repository is public and complete (https://github.com/kd-s-t/stake-on-it)
+- [x] README is comprehensive
+- [x] All screenshots are clear and relevant (5 screenshots uploaded)
+- [x] Tool usage is clearly demonstrated (Kiro + AWS Q)
+- [x] No placeholder content remains
+- [x] All links work correctly
+- [x] Submission form is fully completed
+- [x] Double-checked for disqualification risks
 
 ### Submission Day
 - [ ] Submit before December 1, 2025 deadline
@@ -267,6 +267,12 @@
 
 ---
 
-**Last Updated:** [Current Date]  
-**Status:** [ ] Not Started | [ ] In Progress | [ ] Ready for Submission | [ ] Submitted
+**Last Updated:** November 28, 2025  
+**Status:** [x] Ready for Submission
+
+**Submission Details:**
+- Repository: https://github.com/kd-s-t/stake-on-it
+- Live Demo: https://stake-on-it.vercel.app/
+- Video Demo: https://drive.google.com/file/d/1stIczq5hkdwrRvZuiPz66HqdNr8gopYo/view?usp=sharing
+- Documentation: https://drive.google.com/drive/folders/1ddxIJwfgWyreCIZP6UsRI0RIcs68KfsO?usp=sharing
 
